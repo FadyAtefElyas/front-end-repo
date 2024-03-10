@@ -17,6 +17,7 @@ jobs:
 
       - name: build
       - run: echo "building front end ##"
+      
       - name: Deploy to Server 1
         uses: easingthemes/ssh-deploy@main
         env:
@@ -32,15 +33,10 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # Update your npm
             npm install npm@9 -g
-
             git clone https://github.com/louislam/uptime-kuma.git
             cd uptime-kuma
             npm run setup
-
             node server/server.js
-
             npm install pm2 -g && pm2 install pm2-logrotate
-
             pm2 start server/server.js --name uptime-kuma
