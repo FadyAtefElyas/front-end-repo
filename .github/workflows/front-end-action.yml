@@ -33,5 +33,14 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo docker run -d --restart=always -p 3001:3001 -v uptime-kuma:/app/data --name uptime-kuma louislam/uptime-kuma:1
+            
+            curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+
+            git clone https://github.com/louislam/uptime-kuma.git
+            cd uptime-kuma
+            npm run setup
+            node server/server.js
+            npm install pm2 -g && pm2 install pm2-logrotate
+            pm2 start server/server.js --name uptime-kuma
 
